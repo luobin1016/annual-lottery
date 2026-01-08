@@ -2,6 +2,39 @@
 
 本文档详细说明了如何在本地搭建 annual-lottery 项目的开发环境。
 
+## 🚀 快速开始 (5分钟上手)
+
+如果你已经安装了 Node.js 18+ 和 Git，可以快速开始：
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/luobin1016/annual-lottery.git
+cd annual-lottery
+
+# 2. 安装依赖 (选择其中一种)
+pnpm install          # 推荐，需先安装: npm install -g pnpm
+# 或
+npm install --force   # 使用 npm
+
+# 3. 启动开发服务器
+pnpm dev             # 使用 pnpm
+# 或
+npm run dev          # 使用 npm
+
+# 4. 打开浏览器访问 http://localhost:6719
+```
+
+**需要完整的多设备数据共享功能？** 额外启动后端服务：
+
+```bash
+# 新开一个终端
+pnpm server:dev
+# 或
+npm run server:dev
+```
+
+---
+
 ## 目录
 
 - [系统要求](#系统要求)
@@ -518,6 +551,64 @@ pnpm config set registry https://registry.npmjs.org
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 开启 Pull Request
+
+更多贡献指南请查看 [CONTRIBUTING.md](./.github/CONTRIBUTING.md)
+
+## 📋 快速参考卡片
+
+### 环境要求速查表
+
+| 软件 | 最低版本 | 推荐版本 | 说明 |
+|------|---------|---------|------|
+| Node.js | 18.x | 20.x LTS | 必需 |
+| npm | 9.x | 10.x | 随 Node.js 安装 |
+| pnpm | - | 8.x+ | 推荐，需单独安装 |
+| Git | 2.x | 最新版 | 必需 |
+
+### 常用命令速查表
+
+| 命令 | 说明 |
+|------|------|
+| `pnpm install` | 安装所有依赖 |
+| `pnpm dev` | 启动前端开发服务器 (端口 6719) |
+| `pnpm server:dev` | 启动后端服务器 (端口 3456) |
+| `pnpm build` | 构建生产版本 |
+| `pnpm build:file` | 构建可直接打开的 HTML 版本 |
+| `pnpm lint` | 代码检查 |
+| `pnpm lint:fix` | 自动修复代码问题 |
+| `pnpm test` | 运行单元测试 |
+| `pnpm preview` | 预览构建结果 |
+
+### VS Code 必装插件
+
+- **Vue.volar** - Vue 3 语法支持 (必需)
+- **Vue.vscode-typescript-vue-plugin** - TypeScript 支持 (必需)
+- **dbaeumer.vscode-eslint** - 代码规范检查 (推荐)
+- **bradlc.vscode-tailwindcss** - Tailwind CSS 智能提示 (推荐)
+
+### 项目端口
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| 前端开发服务器 | 6719 | Vite 开发服务器 |
+| 后端 API 服务器 | 3456 | Express + SQLite |
+
+### 目录结构速览
+
+```
+annual-lottery/
+├── src/                   # 前端源代码
+│   ├── views/            # 页面
+│   ├── components/       # 组件
+│   ├── stores/           # 状态管理 (Pinia)
+│   ├── router/           # 路由配置
+│   └── utils/            # 工具函数
+├── server/               # 后端服务
+│   ├── index.js         # 服务入口
+│   └── db.js            # 数据库配置
+├── public/              # 静态资源
+└── dist/                # 构建产物 (git ignored)
+```
 
 ## 许可证
 
