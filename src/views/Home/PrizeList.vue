@@ -429,16 +429,26 @@ onMounted(() => {
 }
 
 .preview-image-wrapper {
-  margin-bottom: 24px;
+  /* 居中并限制尺寸，避免贴边被边框“吃掉” */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  width: clamp(240px, 40vw, 420px);
+  aspect-ratio: 1 / 1;
+  padding: 8px;
   border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .preview-image {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
+  /* 全面居中显示且不裁剪 */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
   display: block;
 }
 

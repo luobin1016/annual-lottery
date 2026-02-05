@@ -152,8 +152,50 @@ async function checkIfJoined() {
   }
 }
 
-// 处理头像上传
-const handleAvatarUpload = (event: Event) => {
+// 压缩图片函数
+const compressImage = (file: File, maxWidth = 200, maxHeight = 200, quality = 0.8): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          reject(new Error('Canvas context not available'))
+          return
+        }
+        
+        let { width, height } = img
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width
+            width = maxWidth
+          }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height
+            height = maxHeight
+          }
+        }
+        
+        canvas.width = width
+        canvas.height = height
+        ctx.drawImage(img, 0, 0, width, height)
+        
+        const compressed = canvas.toDataURL('image/jpeg', quality)
+        resolve(compressed)
+      }
+      img.onerror = () => reject(new Error('Image load failed'))
+      img.src = e.target?.result as string
+    }
+    reader.onerror = () => reject(new Error('File read failed'))
+    reader.readAsDataURL(file)
+  })
+}
+
+// 处理头像上传（更新版）
+const handleAvatarUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file) return
@@ -163,18 +205,48 @@ const handleAvatarUpload = (event: Event) => {
     return
   }
 
-  if (file.size > 2 * 1024 * 1024) {
-    toast.open({ message: t('joinLottery.avatarTooLarge'), type: 'warning', position: 'top' })
+  if (file.size > 10 * 1024 * 1024) {
+    toast.open({ message: '图片过大，请选择小于10MB的图片', type: 'warning', position: 'top' })
     return
   }
 
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    const result = e.target?.result as string
-    avatarPreview.value = result
-    formData.value.avatar = result
+  try {
+    isSubmitting.value = true
+    
+    const originalSizeKB = Math.round(file.size / 1024)
+    console.log(`[头像上传] 原始大小: ${originalSizeKB}KB`)
+    
+    // 压缩图片
+    const compressedImage = await compressImage(file, 200, 200, 0.8)
+    
+    const sizeInBytes = (compressedImage.length * 3) / 4
+    const sizeInKB = Math.round(sizeInBytes / 1024)
+    
+    console.log(`[头像上传] 压缩后大小: ${sizeInKB}KB, 压缩率: ${((1 - sizeInKB / originalSizeKB) * 100).toFixed(2)}%`)
+    
+    // 如果压缩后仍超过 500KB，降低质量重新压缩
+    if (sizeInBytes > 500 * 1024) {
+      console.log('[头像上传] 超过500KB，降低质量重新压缩...')
+      const recompressed = await compressImage(file, 150, 150, 0.6)
+      avatarPreview.value = recompressed
+      formData.value.avatar = recompressed
+    } else {
+      avatarPreview.value = compressedImage
+      formData.value.avatar = compressedImage
+    }
+    
+    toast.open({ 
+      message: `图片已压缩至 ${sizeInKB}KB`, 
+      type: 'success', 
+      position: 'top',
+      duration: 2000
+    })
+  } catch (error) {
+    console.error('[头像上传] 压缩失败:', error)
+    toast.open({ message: '图片压缩失败，请重试', type: 'error', position: 'top' })
+  } finally {
+    isSubmitting.value = false
   }
-  reader.readAsDataURL(file)
 }
 
 const triggerFileInput = () => fileInputRef.value?.click()

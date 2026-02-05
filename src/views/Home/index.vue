@@ -226,8 +226,8 @@ function init() {
     avatar.className = 'card-avatar';
     avatar.src = tableData.value[i].avatar;
     avatar.alt = 'avatar';
-    avatar.style.width = '140px';
-    avatar.style.height = '140px';
+    avatar.style.width = 'auto';
+    avatar.style.height = 'auto';
     if(!isShowAvatar.value) avatar.style.display = 'none'
     element.appendChild(avatar);
 

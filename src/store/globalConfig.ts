@@ -48,7 +48,7 @@ export const useGlobalConfig = defineStore('global', {
       globalConfig: {
         rowCount: 17,
         isSHowPrizeList: true,
-        isShowAvatar: false,
+        isShowAvatar: true,
         topTitle: i18n.global.t('data.defaultTitle'),
         language: browserLanguage,
         theme: {
@@ -280,7 +280,7 @@ export const useGlobalConfig = defineStore('global', {
       this.globalConfig = {
         rowCount: 17,
         isSHowPrizeList: true,
-        isShowAvatar: false,
+        isShowAvatar: true,
         topTitle: topTitle ? topTitle : i18n.global.t('data.defaultTitle'),
         language: browserLanguage,
         theme: {

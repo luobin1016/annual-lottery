@@ -89,7 +89,33 @@ export function useElementStyle(element: any, person: IPersonConfig, index: numb
   }
   
   // 头像
-  element.children[3].src = person.avatar
+  if (element.children[3]) {
+    if (person.avatar) {
+      element.children[3].src = person.avatar
+      element.children[3].style.display = 'block'
+      // 缩小头像尺寸
+      const avatarSize = mod === 'lucky' ? cardSize.width * 0.7 : cardSize.width * 0.7
+      element.children[3].style.width = `${avatarSize}px`
+      element.children[3].style.height = `${avatarSize}px`
+      element.children[3].style.maxWidth = `${avatarSize}px`
+      element.children[3].style.maxHeight = `${avatarSize}px`
+      element.children[3].style.minWidth = `${avatarSize}px`
+      element.children[3].style.minHeight = `${avatarSize}px`
+      element.children[3].style.borderRadius = '50%'
+      element.children[3].style.objectFit = 'cover'
+      // 降低透明度
+      element.children[3].style.opacity = '0.5'
+      // 居中定位
+      element.children[3].style.position = 'absolute'
+      element.children[3].style.top = '60%'
+      element.children[3].style.left = '50%'
+      element.children[3].style.transform = 'translate(-50%, -50%)'
+      // 放到底层作为背景
+      element.children[3].style.zIndex = '0'
+    } else {
+      element.children[3].style.display = 'none'
+    }
+  }
   
   return element
 }
